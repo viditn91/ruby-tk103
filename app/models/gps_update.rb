@@ -1,6 +1,7 @@
 class GPSUpdate
-  def initialize(message)
+  def initialize(message, device)
     puts "message #{message}"
+    @device       = device
     @time         = message[0..5]
     @availability = message[6]
     @latitude     = message[7..16]
@@ -14,6 +15,6 @@ class GPSUpdate
   end
 
   def position
-    @position ||= Position.from_decimal(@latitude, @longitude)
+    @position ||= Position.from_decimal(@latitude, @longitude, @decimal)
   end
 end

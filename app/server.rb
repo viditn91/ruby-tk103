@@ -9,11 +9,11 @@ ActiveRecord::Base.logger.level = 0
 configuration = YAML::load(IO.read('db/config.yml'))
 ActiveRecord::Base.establish_connection(configuration['development'])
 
-HANDSHAKE = "BP00"
+HANDSHAKE = "BP05"
 UPDATE    = "BR00"
 
-def store_location(message)
-  update = GPSUpdate.new(message)
+def store_location(message, device)
+  update = GPSUpdate.new(message, device)
   puts "You are at: #{update.position}"
   update.position.save!
 end
@@ -36,14 +36,17 @@ def parse(message)
 
     case command
     when HANDSHAKE
-      puts "Hello #{serial}"
+      puts "[HANDSHAKE] from #{serial}"
+      store_location(body[15, -1], serial)
+      { serial: serial }
     when UPDATE
-      store_location(body)
+      puts "[UPDATE] from #{serial}"
+      store_location(body, serial)
     else
-      puts "Sorry, I don't understand #{command}"
+      puts "[LEAK] from #{serial}. Command -> #{command} can not be understood"
     end
   rescue Exception => e
-    puts "Error: #{e}."
+    puts "[ERROR] #{e}."
     puts e.backtrace
   end
 end
@@ -61,7 +64,13 @@ loop do
       message += byte
 
       if byte == ")"
-        parse(message)
+        returned_value = parse(message)
+        
+        if returned_value.is_a? Hash
+          puts "[Response] Handshake response to #{returned_value[:serial]}"
+          client.puts "(#{returned_value[:serial]}AP05)"
+        end
+
         message = ""
       end
     end
