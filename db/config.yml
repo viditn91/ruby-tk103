@@ -1,11 +1,18 @@
 global: &global
-  adapter: mysql2
+  adapter: postgresql
   pool: 5
   timeout: 5000
   encoding: utf8
 
 development:
   host: localhost
-  database: gps_frankevers_nl_development
+  database: app_development
   username: root
   <<: *global
+
+production:
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
