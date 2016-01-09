@@ -1,5 +1,5 @@
 global: &global
-  adapter: postgresql
+  adapter: mysqld
   pool: 5
   timeout: 5000
   encoding: utf8
