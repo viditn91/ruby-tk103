@@ -13,12 +13,19 @@
 
 ActiveRecord::Schema.define(version: 1) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "positions", force: :cascade do |t|
-    t.float    "lat",        limit: 24
-    t.float    "lon",        limit: 24
-    t.string   "device",     limit: 255
+    t.float    "lat"
+    t.float    "lon"
+    t.string   "device"
+    t.string   "speed"
+    t.string   "orientation"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "positions", ["device"], name: "index_positions_on_device", using: :btree
 
 end

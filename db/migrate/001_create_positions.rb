@@ -3,7 +3,9 @@ class CreatePositions < ActiveRecord::Migration
     create_table :positions do |t|
       t.float :lat
       t.float :lon
-      t.string :device
+      t.string :device, index: true
+      t.string :speed
+      t.string :orientation
       t.timestamps
     end
   end

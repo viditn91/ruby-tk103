@@ -5,7 +5,7 @@ class Position < ActiveRecord::Base
   class << self
     # Init from Degrees Minutes notation
     # E.g. 5207.4772N 00505.9965E
-    def from_decimal(lat, lon, device)
+    def from_decimal(lat, lon, device, speed, orientation)
       @lat = "#{lat[0..1]}.#{minutes_to_degrees(lat[2..8].to_f)}".to_f
       @lat *= -1 if lat[9] == SOUTH
       @lat = @lat.round(7)
@@ -14,7 +14,7 @@ class Position < ActiveRecord::Base
       @lon *= -1 if lon[10] == WEST
       @lon = @lon.round(7)
 
-      Position.create(lat: @lat, lon: @lon, device: device)
+      Position.create(lat: @lat, lon: @lon, device: device, speed: speed, orientation: orientation)
     end
 
     def minutes_to_degrees(minutes)
