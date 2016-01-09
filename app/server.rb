@@ -37,7 +37,7 @@ def parse(message)
     case command
     when HANDSHAKE
       puts "[HANDSHAKE] from #{serial}"
-      store_location(body[15, -1], serial)
+      store_location(body[15..-1], serial)
       { serial: serial }
     when UPDATE
       puts "[UPDATE] from #{serial}"
@@ -51,8 +51,8 @@ def parse(message)
   end
 end
 
-puts "GPS server listening on port 12345"
-server = TCPServer.open 12345
+puts "GPS server listening on port 4567"
+server = TCPServer.open 4567
 
 loop do
   Thread.start(server.accept) do |client|
