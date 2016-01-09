@@ -15,6 +15,6 @@ class GPSUpdate
   end
 
   def position
-    @position ||= Position.from_decimal(@latitude, @longitude, @decimal)
+    @position ||= Position.from_decimal(@latitude, @longitude, @device)
   end
 end
